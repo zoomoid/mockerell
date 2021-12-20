@@ -16,7 +16,14 @@ spec:
     spec:
       containers:
       - name: mockerellbot
-        image: <Image>
+        env:
+          - name: MOCK_BOT_TOKEN
+            valueFrom:
+                secretKeyRef:
+                  name: mockerellbot-token
+                  key: MOCK_BOT_TOKEN
+                  optional: true
+        image: ghcr.io/zoomoid/mockerell:latest
         resources:
           limits:
             memory: "128Mi"
