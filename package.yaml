@@ -1,0 +1,39 @@
+name:                mock-bot-telegram
+version:             0.3.3
+license:             WTFPL
+git:                 "https://git.eisfunke.com/software/mock-bot-telegram"
+author:              "Nicolas Lenz"
+maintainer:          "nicolas@eisfunke.com"
+copyright:           "2021 Nicolas Lenz"
+
+extra-source-files:
+- README.md
+
+synopsis:            tELegrAm bOT iNteGratiOn fOR mOCK
+category:            Web
+description:         Please see the README at <https://git.eisfunke.com/software/mock-bot-telegram#readme>
+
+dependencies:
+- base
+- telegram-bot-simple
+- mock
+- text
+- mtl
+- cryptonite
+- memory
+- classy-prelude
+- aeson
+
+default-extensions:
+- LambdaCase
+- OverloadedStrings
+- NoImplicitPrelude
+
+executables:
+  mock-bot-telegram:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
