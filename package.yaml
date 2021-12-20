@@ -1,17 +1,17 @@
-name:                mock-bot-telegram
-version:             0.3.3
+name:                mockerell
+version:             0.4.0
 license:             WTFPL
-git:                 "https://git.eisfunke.com/software/mock-bot-telegram"
+git:                 "https://github.com/zoomoid/mockerell"
 author:              "Nicolas Lenz"
-maintainer:          "nicolas@eisfunke.com"
-copyright:           "2021 Nicolas Lenz"
+maintainer:          "Alexander Bartolomey <occloxium@gmail.com>"
+copyright:           "2021 Alexander Bartolomey"
 
 extra-source-files:
 - README.md
 
-synopsis:            tELegrAm bOT iNteGratiOn fOR mOCK
+synopsis:            tELegrAm bOT fOR mOCKiNg
 category:            Web
-description:         Please see the README at <https://git.eisfunke.com/software/mock-bot-telegram#readme>
+description:         A telegram bot for mocking with haskell
 
 dependencies:
 - base
