@@ -1,4 +1,4 @@
-FROM fpco/stack-build:latest AS builder
+FROM fpco/stack-build-small:latest AS builder
 
 WORKDIR /srv
 
