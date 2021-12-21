@@ -23,7 +23,7 @@ spec:
                   name: mockerellbot-token
                   key: MOCK_BOT_TOKEN
                   optional: true
-        image: ghcr.io/zoomoid/mockerell:latest
+        image: ghcr.io/zoomoid/mockerell:edge
         resources:
           limits:
             memory: "128Mi"

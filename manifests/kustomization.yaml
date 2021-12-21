@@ -2,5 +2,11 @@ resources:
   - deployment.yaml
 secretGenerator:
   - name: mockerellbot-token
+    options:
+      disableNameSuffixHash: true
+      immutable: true
     envs:
       - .env
+commonLabels:
+  app.kubernetes.io/name: mockerellbot
+  app.kubernetes.io/created-by: zoomoid
