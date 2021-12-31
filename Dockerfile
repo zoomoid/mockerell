@@ -1,21 +1,24 @@
-FROM fpco/stack-build-small:latest AS builder
+FROM python:3.10-slim
 
-WORKDIR /srv
+RUN apt-get install tini && \
+    pip install pipenv
 
-COPY . .
+ENV PYTHONFAULTHANDLER=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONHASHSEED=random \
+    PIP_NO_CACHE_DIR=off \
+    PIP_DISABLE_PIP_VERSION_CHECK=on \
+    PIP_DEFAULT_TIMEOUT=100 \
+    PIPENV_HIDE_EMOJIS=true \
+    PIPENV_COLORBLIND=true \
+    PIPENV_NOSPIN=true
 
-RUN rm stack.yaml.lock && \
-    apt update -y && \
-    apt upgrade -y && \
-    stack build && \
-    cp $(stack path --local-install-root)/bin/mock-bot-telegram .
+WORKDIR /app
 
-FROM debian:latest
+COPY Pipfile Pipfile.lock /app/
 
-RUN apt-get update && apt-get install -y locales ca-certificates
-RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen en_US.UTF-8
-ENV LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_ALL=en_US.UTF-8
+RUN pipenv install --system --deploy --ignore-pipfile
 
-COPY --from=builder /srv/mock-bot-telegram /usr/local/bin/
+COPY src bot
 
-CMD ["mock-bot-telegram"]
+ENTRYPOINT [ "tini", "--", "python -m bot" ]
