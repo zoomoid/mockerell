@@ -1,6 +1,6 @@
-FROM python:3.10-slim
+FROM python:3.10-alpine
 
-RUN apt-get install tini && \
+RUN apk add --no-cache tini && \
     pip install pipenv
 
 ENV PYTHONFAULTHANDLER=1 \
@@ -21,4 +21,4 @@ RUN pipenv install --system --deploy --ignore-pipfile
 
 COPY src bot
 
-ENTRYPOINT [ "tini", "--", "python -m bot" ]
+ENTRYPOINT [ "/sbin/tini", "--", "python -m bot" ]
