@@ -17,6 +17,8 @@ WORKDIR /app
 
 COPY docker-entrypoint.sh /bin/
 
+RUN chmod u+x /bin/docker-entrypoint.sh
+
 COPY Pipfile Pipfile.lock /app/
 
 RUN pipenv install --system --deploy --ignore-pipfile
