@@ -19,6 +19,8 @@ COPY Pipfile Pipfile.lock /app/
 
 RUN pipenv install --system --deploy --ignore-pipfile
 
-COPY src bot
+COPY bot bot
 
-ENTRYPOINT [ "/sbin/tini", "--", "python -m bot" ]
+ENTRYPOINT [ "/sbin/tini", "--", "$@" ]
+
+CMD [ "python", "-m", "bot"]
