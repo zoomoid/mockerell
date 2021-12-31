@@ -50,7 +50,6 @@ def reply_to_inline(update: Update, context: CallbackContext):
     a preview of how each style is going to look with the provided text
     """
     query = update.inline_query.query
-    print(query)
     if not query:
         return
     results = [
