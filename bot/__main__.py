@@ -5,7 +5,7 @@ import re
 from functools import reduce
 from typing import Callable
 
-from telegram import InlineQueryResultArticle, InputTextMessageContent, Update
+from telegram import InlineQueryResultArticle, InputTextMessageContent, Update, ParseMode
 from telegram.ext import CallbackContext, CommandHandler, MessageHandler, Updater
 from telegram.ext.filters import Filters
 from telegram.ext.inlinequeryhandler import InlineQueryHandler
@@ -41,7 +41,7 @@ def help_command(update: Update, context: CallbackContext):
         "",
         "*Available Styles:*",
     ] + [f"  *{name}*: {pymocklib.style_doc(name)}" for (name, _) in pymocklib.styles]
-    update.message.reply_text("\n".join(help_lines), parse_mode="MARKDOWN_V2")
+    update.message.reply_text("\n".join(help_lines), parse_mode=ParseMode.MARKDOWN_V2)
 
 
 def reply_to_inline(update: Update, context: CallbackContext):
