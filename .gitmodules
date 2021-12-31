@@ -1,3 +1,0 @@
-[submodule "src/pymocklib"]
-	path = src/pymocklib
-	url = https://github.com/zoomoid/pymocklib.git
