@@ -11,7 +11,7 @@ from telegram.ext.filters import Filters
 from telegram.ext.inlinequeryhandler import InlineQueryHandler
 
 import pymocklib
-import src
+import bot
 
 token = os.environ.get("MOCK_BOT_TOKEN")
 bot_name = os.environ.get("MOCK_BOT_NAME", "mockerell")
@@ -26,7 +26,7 @@ def help_command(update: Update, context: CallbackContext):
     Composes the response to the /help and /start commands of the bot
     """
     help_lines = [
-        f"*Mockerell Bot {src.__version__}*",
+        f"*Mockerell Bot {bot.__version__}*",
         "A Telegram bot that lets you express your true feelings",
         "Developed by @zoomoid at https://github.com/zoomoid/mockerell"
         "Inspired by Nicolas Lenz' work (https://git.eisfunke.com/software/mock-bot-telegram)",
