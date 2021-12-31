@@ -15,12 +15,14 @@ ENV PYTHONFAULTHANDLER=1 \
 
 WORKDIR /app
 
+COPY docker-entrypoint.sh /bin/
+
 COPY Pipfile Pipfile.lock /app/
 
 RUN pipenv install --system --deploy --ignore-pipfile
 
 COPY bot bot
 
-ENTRYPOINT [ "/sbin/tini", "--", "$@" ]
+ENTRYPOINT [ "/sbin/tini", "--", "docker-entrypoint.sh" ]
 
-CMD [ "python", "-m", "bot"]
+CMD [ "python", "-m", "bot" ]
