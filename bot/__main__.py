@@ -41,7 +41,7 @@ def help_command(update: Update, context: CallbackContext):
         "",
         "*Available Styles:*",
     ] + [f"  *{name}*: {pymocklib.style_doc(name)}" for (name, _) in pymocklib.styles]
-    update.message.reply_text("\n".join(help_lines), parse_mode=ParseMode.MARKDOWN_V2)
+    update.message.reply_text("\n".join(help_lines), parse_mode=ParseMode.MARKDOWN)
 
 
 def reply_to_inline(update: Update, context: CallbackContext):
