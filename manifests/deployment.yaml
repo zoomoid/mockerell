@@ -29,7 +29,7 @@ spec:
                   name: mockerellbot-token
                   key: MOCK_BOT_NAME
                   optional: true
-        image: ghcr.io/zoomoid/mockerell:edge
+        image: ghcr.io/zoomoid/mockerell:latest
         imagePullPolicy: Always
         resources:
           limits:
