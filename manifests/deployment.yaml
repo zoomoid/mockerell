@@ -14,8 +14,17 @@ spec:
       labels:
         app.kubernetes.io/app: mockerellbot
     spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: mockerellbot
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - "ALL"
         env:
           - name: MOCK_BOT_TOKEN
             valueFrom:

@@ -27,4 +27,6 @@ COPY bot bot
 
 ENTRYPOINT [ "/sbin/tini", "--", "docker-entrypoint.sh" ]
 
+USER 65532:65532
+
 CMD [ "python", "-m", "bot" ]
