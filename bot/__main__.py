@@ -28,21 +28,29 @@ def help_command(update: Update, context: CallbackContext):
     help_lines = [
         f"*Mockerell Bot {bot.__version__}*",
         "A Telegram bot that lets you express your true feelings",
-        "Developed by @zoomoid at https://github.com/zoomoid/mockerell"
-        "Inspired by Nicolas Lenz' work (https://git.eisfunke.com/software/mock-bot-telegram)",
+        "Developed by @zoomoid at [https://github.com/zoomoid/mockerell](https://github.com/zoomoid/mockerell)",
+        "",
+        "Inspired by Nicolas Lenz' work [https://git.eisfunke.com/software/mock-bot-telegram](https://git.eisfunke.com/software/mock-bot-telegram)",
         "",
         f"*Inline usage:* Just type `@{bot_name}` and the text you want to stylize in any chat. Telegram will show you a selection of the styles available.",
+        ""
+        f"*Inline compositional usage:*: Type `@{bot_name}`, followed by '/' and then a comma-separated list of your styles"
         "",
         "*Usage:* \\[STYLE] \\[TEXT]",
         "*Example:* `random Cool Text`",
         "",
-        "Multiple styles can be concatenated with '|'s.",
-        "*Example:* `random|double Cool Text`",
+        "Multiple styles can be concatenated with ','.",
+        "*Example:* `random,double Cool Text`",
         "",
         "*Available Styles:*",
     ] + [f"  *{name}*: {pymocklib.style_doc(name)}" for (name, _) in pymocklib.styles]
     update.message.reply_text("\n".join(help_lines), parse_mode=ParseMode.MARKDOWN)
 
+def apply(p: str, f: Callable[[str], str]) -> str:
+    """
+    somewhat functional way of composing the transformer functions onto a base string
+    """
+    return f(p)
 
 def reply_to_inline(update: Update, context: CallbackContext):
     """
@@ -52,6 +60,46 @@ def reply_to_inline(update: Update, context: CallbackContext):
     query = update.inline_query.query
     if not query:
         return
+
+    # optimistically go into compositional mode. If parsing fails, fall back to regular mode
+    if query.strip().startswith('/'):
+        # deconstruct composition pattern
+        words = query.split()
+        command = words.pop(0)
+        command = command.removeprefix("/").lower()
+        style_names = command.split(",")
+        words = " ".join(words)
+        funcs = [f for (name, f) in pymocklib.styles if name in style_names]
+
+        if not funcs:
+            # composition went wrong, send only one result back
+            msg = "Invalid mocking."
+            if update.effective_chat.type == "private":
+                msg += " See /help"
+            results = [
+                InlineQueryResultArticle(
+                    id=hashlib.sha256(f"{query}".encode("utf-8")).hexdigest(),
+                    title=command,
+                    description=msg,
+                    input_message_content=InputTextMessageContent(message_text=msg),
+                )
+            ]
+            context.bot.answer_inline_query(update.inline_query.id, results)
+            return
+        if len(funcs) > 0:
+            msg = reduce(apply, funcs, words)
+            results = [
+                InlineQueryResultArticle(
+                    id=hashlib.sha256(f"{query}".encode("utf-8")).hexdigest(),
+                    title=command.replace(',', '->'),
+                    description=msg,
+                    input_message_content=InputTextMessageContent(message_text=msg),
+                )
+            ]
+            context.bot.answer_inline_query(update.inline_query.id, results)
+            return
+
+    # regular, non-compositional mode
     results = [
         InlineQueryResultArticle(
             id=hashlib.sha256(f"{name}{query}".encode("utf-8")).hexdigest(),
@@ -69,12 +117,12 @@ def reply(update: Update, context: CallbackContext):
     Replies to any message with a valid command+text combo, i.e., when a user
     requests a style, e.g. "random" and any text followed by that.
 
-    Commands can be composed using "|" from all the available styles
+    Commands can be composed using "," from all the available styles
     """
     message = update.message.text
     words = message.split()
     command = words.pop(0)
-    style_names = re.sub("^/", "", command).split("@")[0].lower().split("|")
+    style_names = re.sub("^/", "", command).split("@")[0].lower().split(",")
     words = " ".join(words)
     funcs = [f for (name, f) in pymocklib.styles if name in style_names]
     if not funcs:
@@ -87,12 +135,6 @@ def reply(update: Update, context: CallbackContext):
             reply_to_message_id=update.message.message_id,
         )
         return
-
-    def apply(p: str, f: Callable[[str], str]) -> str:
-        """
-        somewhat functional way of composing the transformer functions onto a base string
-        """
-        return f(p)
 
     msg = reduce(apply, funcs, words)
     context.bot.send_message(
@@ -119,7 +161,7 @@ def main() -> None:
     bot.start_polling()
 
     # Block until the user presses Ctrl-C or the process receives SIGINT,
-    # SIGTERM or SIGABRT. This should be used most of the time, since
+    # SIGTERM, or SIGABRT. This should be used most of the time, since
     # start_polling() is non-blocking and will stop the bot gracefully.
     bot.idle()
 
