@@ -46,8 +46,7 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v4.0.0
         with:
-          context: ./bot
-          file: ./bot/Dockerfile
+          context: .
           platforms: linux/amd64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
