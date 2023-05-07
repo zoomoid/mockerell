@@ -67,6 +67,9 @@ async def reply_to_inline(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     if not update.inline_query:
         return
 
+    if not update.inline_query.query:
+        return
+
     query = update.inline_query.query
 
     results = [
