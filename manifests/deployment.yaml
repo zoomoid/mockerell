@@ -31,13 +31,7 @@ spec:
                 secretKeyRef:
                   name: mockerellbot-token
                   key: MOCK_BOT_TOKEN
-                  optional: true
-          - name: MOCK_BOT_NAME
-            valueFrom:
-                secretKeyRef:
-                  name: mockerellbot-token
-                  key: MOCK_BOT_NAME
-                  optional: true
+                  optional: false
         image: ghcr.io/zoomoid/mockerell:latest
         imagePullPolicy: Always
         resources:
