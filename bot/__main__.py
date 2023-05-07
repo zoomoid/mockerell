@@ -68,17 +68,17 @@ async def reply_to_inline(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     if not update.inline_query:
         return
 
-    if not update.inline_query.query:
-        return
-
     query = update.inline_query.query
+
+    if not query:
+        return
 
     results = [
         InlineQueryResultArticle(
             id=str(uuid4()),
             title=name,
             description=f(query),
-            input_message_content=InputTextMessageContent(f(query), parse_mode=ParseMode.HTML),
+            input_message_content=InputTextMessageContent(f(query)),
         )
         for (name, f) in pymocklib.styles
     ]
