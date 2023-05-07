@@ -4,6 +4,7 @@ import os
 import re
 from functools import reduce
 from typing import Callable
+from uuid import uuid4
 
 from telegram import InlineQueryResultArticle, InputTextMessageContent, Update
 from telegram.constants import ParseMode
@@ -74,10 +75,10 @@ async def reply_to_inline(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
     results = [
         InlineQueryResultArticle(
-            id=hashlib.sha256(f"{name}{query}".encode("utf-8")).hexdigest(),
+            id=str(uuid4()),
             title=name,
             description=f(query),
-            input_message_content=InputTextMessageContent(message_text=f(query)),
+            input_message_content=InputTextMessageContent(f(query), parse_mode=ParseMode.HTML),
         )
         for (name, f) in pymocklib.styles
     ]
