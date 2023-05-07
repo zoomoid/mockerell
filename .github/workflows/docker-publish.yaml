@@ -26,9 +26,6 @@ jobs:
       - name: Install cosign
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@main
-      
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
 
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v2.5.0
@@ -46,23 +43,20 @@ jobs:
         uses: docker/metadata-action@v4.4.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=semver,pattern={{version}}
+          tags: type=semver,pattern={{version}}
 
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@v4.0.0
         with:
           context: .
-          platforms: linux/amd64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
         env:
+          COSIGN_EXPERIMENTAL: "true"
           TAGS: ${{ steps.build-and-push.outputs.digest }}
         run: echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign --yes {}@${{ steps.build-and-push.outputs.digest }}
