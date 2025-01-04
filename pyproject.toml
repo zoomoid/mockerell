@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "mockerell"
+version = "0.1.0"
+description = ""
+authors = ["Alexander Bartolomey <github@alexanderbartolomey.de>"]
+license = "MIT"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.10"
+python-telegram-bot = "^20.3"
+pymocklib = ">=1.1.3"
+black = "*"
+pylint = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
