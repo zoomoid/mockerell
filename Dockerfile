@@ -1,6 +1,6 @@
 FROM python:3.11-alpine
 
-RUN pip install pipenv
+RUN pip install poetry
 
 ENV PYTHONFAULTHANDLER=1 \
     PYTHONUNBUFFERED=1 \
@@ -8,15 +8,17 @@ ENV PYTHONFAULTHANDLER=1 \
     PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
-    PIPENV_HIDE_EMOJIS=true \
-    NO_COLOR=true \
-    PIPENV_NOSPIN=true
+    # Poetry specific settings
+    POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_CREATE=false \
+    POETRY_HOME="/opt/poetry" \
+    POETRY_VERSION=1.7.1
 
 WORKDIR /app
 
-COPY Pipfile Pipfile.lock /app/
+COPY pyproject.toml poetry.lock /app/
 
-RUN pipenv install --system --deploy --ignore-pipfile
+RUN poetry install --no-dev --no-root
 
 COPY bot bot
 

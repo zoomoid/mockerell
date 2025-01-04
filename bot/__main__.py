@@ -73,6 +73,21 @@ async def reply_to_inline(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     if not query:
         return
 
+    regional_indicator_code_points = list(query.strip()[0:2].encode("unicode-escape").decode("ascii").split("\\U"))[1:]
+
+    flag_intersperse_funcs = []
+
+    if len(regional_indicator_code_points) == 2 and all(
+        [c >= int("0x1F1E6", 16) and c <= int("0x1F1FF", 16)
+        for c in [int(i, 16) for i in regional_indicator_code_points]]
+    ):
+        # flag emojis are composed of two regional indicators from inbetween U+1F1E6 and U+1F1FF
+        # convert flag back to characters
+        flag = "".join([chr(int(cp, 16)) for cp in regional_indicator_code_points])
+        flag_intersperse_funcs = [(flag * 3, pymocklib.to_interspersed_flag(flag))]
+        # chop the flag from the query
+        query = query[2:]
+
     results = [
         InlineQueryResultArticle(
             id=str(uuid4()),
@@ -80,7 +95,7 @@ async def reply_to_inline(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             description=f(query),
             input_message_content=InputTextMessageContent(f(query)),
         )
-        for (name, f) in pymocklib.styles
+        for (name, f) in pymocklib.styles + flag_intersperse_funcs
     ]
 
     await update.inline_query.answer(results)
@@ -124,7 +139,7 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 def main() -> None:
-    application = Application.builder().token(token).build()
+    application = Application.builder().token(str(token)).build()
 
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("start", help_command))
