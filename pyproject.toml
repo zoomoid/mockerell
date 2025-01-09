@@ -10,7 +10,6 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "^3.10"
 python-telegram-bot = "^20.3"
-pymocklib = ">=1.1.3"
 black = "*"
 pylint = "*"
 
