@@ -319,7 +319,7 @@ def to_interspersed_flag(flag: str):
     Replaces all vowels in latin with a given unicode flag emoji
     """
     def _c(t: str) -> str:
-        set = list("aeiouäöü")
+        set = list("aeiouäöüAEIOUÄÖÜ")
         for s in set:
             t = t.replace(s, flag)
         return t
