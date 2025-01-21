@@ -20,7 +20,8 @@ styles: list[Tuple[str, Callable[[str], str]]] = [
     ("b", to_b),
     ("pray", to_pray),
     ("clap", to_clap),
-    ("cum", sub("cum", " 😳 ")),
+    ("cum", sub("cum", "😳")),
+    ("sus", sub("sus", "😳")),
     ("space", to_space(1)),
     ("space2", to_space(2)),
     ("space3", to_space(3)),
@@ -53,6 +54,7 @@ def style_doc(key: str) -> str:
         case "pray": return "Puts pray emojis (🙏) between all words."
         case "clap": return "Puts clap emojis (👏) between all words."
         case "cum": return "Replaces every occurence of 'cum' with 😳."
+        case "sus": return "Replaces every occurence of 'sus' with 😳."
         case "space": return "Inserts a  s p a c e  between every two characters."
         case "space2": return "Inserts two   s  p  a  c  e  s   between every two characters."
         case "space3": return "Inserts three    s   p   a   c   e   s    between every two characters."
