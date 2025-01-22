@@ -18,7 +18,7 @@ WORKDIR /app
 
 COPY pyproject.toml poetry.lock /app/
 
-RUN poetry install --no-root --no-interaction --no-ansi -vvv
+RUN poetry install --no-interaction --no-ansi -vvv
 
 COPY bot bot
 
